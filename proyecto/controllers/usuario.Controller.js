@@ -4,7 +4,9 @@ const { Usuario } = require('../models');
 // Obtener todos los usuarios
 exports.obtenerUsuarios = async (req, res) => {
   try {
-    const usuarios = await Usuario.findAll();
+    const usuarios = await Usuario.findAll({
+      attribute: ['nombre', 'apellido' ,'email']
+    });
     res.json(usuarios);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener usuarios' });
@@ -14,7 +16,9 @@ exports.obtenerUsuarios = async (req, res) => {
 // Obtener un usuario por ID
 exports.obtenerUsuarioPorId = async (req, res) => {
   try {
-    const usuario = await Usuario.findByPk(req.params.id);
+    const usuario = await Usuario.findByPk(req.params.id, {
+      attribute: ['nombre', 'apellido' ,'email']
+    });
     if (!usuario) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
@@ -33,7 +37,11 @@ exports.crearUsuario = async (req, res) => {
       // Crear el usuario con la contraseña encriptada
       const usuario = await Usuario.create({ ...req.body, contrasena: hashedPassword });
       
-      res.status(201).json(usuario);
+      res.status(201).json({
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email
+      });
     } catch (error) {
       res.status(500).json({ error: 'Error al crear el usuario' });
     }
@@ -61,7 +69,11 @@ exports.actualizarUsuario = async (req, res) => {
       }
   
       await usuario.update(req.body);
-      res.json(usuario);
+      res.status(201).json({
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        email: usuario.email
+      });
     } catch (error) {
       res.status(500).json({ error: 'Error al actualizar el usuario' });
     }
