@@ -77,3 +77,17 @@ exports.eliminarTarea = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar la tarea' });
   }
 };
+// Obtener tareas por el IDUsuario
+exports.obtenerTareaPorUsuario = async (req, res) => {
+  try {
+    const usuario = await Usuario.findByPk(req.params.id);
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const tareas = await Tarea.findAll({ where: { IDUsuario: usuario.id } });
+    res.json(tareas);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las tareas por usuario' });
+  }
+};
