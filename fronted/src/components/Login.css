@@ -34,7 +34,7 @@
   .login-container input {
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--texto-color-1);
     border-radius: 4px;
     width: 300px;
     /*text-align: center;*/
@@ -51,7 +51,7 @@
   }
   
   .login-container button:hover {
-    background-color: var(--texto-color-1);
+    background-color: var(--texto-color-14);
   }
   
   .error {

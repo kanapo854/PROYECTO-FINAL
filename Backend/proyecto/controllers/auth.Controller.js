@@ -26,11 +26,19 @@ exports.iniciarSesion = async (req, res) => {
 
         // Generar un token JWT
         const token = jwt.sign(
-            { id: usuario.id, email: usuario.email }, 
+            { id: usuario.IDUsuario, email: usuario.email }, 
             SECRET_KEY, 
             { expiresIn: "2h" } // Expira en 2 horas
         );
 
+        // Configurar la cookie HttpOnly para el token
+        res.cookie("token", token, {
+            httpOnly: true, // No accesible desde JavaScript
+            secure: process.env.NODE_ENV === "production", // Solo en HTTPS en producción
+            sameSite: "Strict", // Protege contra CSRF
+            maxAge: 2 * 60 * 60 * 1000 // 2 horas de expiración
+        });
+        
         res.json({
             mensaje: "Inicio de sesión exitoso",
             usuario: {

@@ -3,7 +3,10 @@ import "./TaskList.css";
 import Header from "./Header";
 import { useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import showAlert from "./Alert";
+//import Cookies from "js-cookie";
+//import jwtDecode from "jwt-decode";
+
   const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
@@ -27,12 +30,14 @@ import {Link} from "react-router-dom";
           setTasks(response.data);
           setLoading(false);   
         }catch (error){
+          showAlert("error", "Error al obtener las tareas", "var(--red-error)");
           setError("Error al obtener las tareas");
           setLoading(false);
         }
       };
       fetchTask();
     }else {
+      showAlert("error", "No se ha encontrado el usuario", "var(--red-error)");
       setError("No se ha encontrado el usuario");
       setLoading(false);
     }

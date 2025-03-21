@@ -60,12 +60,12 @@
   }
   
   .status.completada {
-    background: green;
+    background: var(--verde-success);
     color: white;
   }
   
   .status.en-progreso {
-    background: blue;
+    background: var(--blue-progress);
     color: white;
   }
 

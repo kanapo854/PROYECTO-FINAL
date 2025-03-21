@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./CreateTask.css";
+import Header from "./Header";
+import showAlert from './Alert';
+
 const CreateTask = () => {
   const [task, setTask] = useState({
     titulo: "",
@@ -27,7 +30,7 @@ const CreateTask = () => {
     e.preventDefault();
 
     if (!user) {
-      alert("Usuario no encontrado");
+      showAlert("error", "Usuario no encontrado", "var(--red-error)");
       return;
     }
 
@@ -40,56 +43,62 @@ const CreateTask = () => {
         estado_tarea: "A" // El estado siempre será "Pendiente"
       });
 
-      alert("Tarea creada con éxito");
+      //alert("Tarea creada con éxito");
+      showAlert("success", "Tarea creada con éxito", "var(--verde-success)");
       // Redirigir a la lista de tareas
       navigate("/tasklist", { state: { user } });
     } catch (error) {
-      alert("Error al crear la tarea");
+      //alert("Error al crear la tarea");
+      showAlert("error", "Error al crear la tarea", "var(--red-error)");
     }
   };
 
   return (
-    <div className="create-task-container">
-      <h2>Crear Nueva Tarea</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="titulo">Título</label>
-          <input
-            type="text"
-            id="titulo"
-            name="titulo"
-            value={task.titulo}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div>
+      <Header user = {user}/>
+      <div className="create-task-container">
+        <h2>Crear Nueva Tarea</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="titulo">Título</label>
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              value={task.titulo}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div>
-          <label htmlFor="descripcion">Descripción</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            value={task.descripcion}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="estado">Estado</label>
-          <textarea
-            id="estado"
-            name="estado"
-            value="Pendiente"
-            required
-          />
-        </div>
-        {/* Aquí se omite el campo de selección de estado porque es siempre "Pendiente" */}
-        
-        <div>
-          <button type="submit">Crear Tarea</button>
-        </div>
-      </form>
+          <div>
+            <label htmlFor="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              value={task.descripcion}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="estado">Estado</label>
+            <textarea
+              id="estado"
+              name="estado"
+              value="Pendiente"
+              required
+            />
+          </div>
+          {/* Aquí se omite el campo de selección de estado porque es siempre "Pendiente" */}
+          
+          <div>
+            <button type="submit">Crear Tarea</button>
+          </div>
+        </form>
+      </div>
     </div>
+    
   );
 };
 

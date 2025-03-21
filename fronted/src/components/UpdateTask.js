@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
 import "./UpdateTask.css";
+import Header from "./Header";
+import showAlert from "./Alert";
 
 const UpdateTask = () => {
   //const [task, setTask] = useState(null);
@@ -47,6 +49,7 @@ const UpdateTask = () => {
         //setTask(response.data);
         
       } catch (error) {
+        showAlert("error", "Error al obtener la tarea", "var(--red-error)");
         setError("Error al obtener la tarea");
         setLoading(false);
       }
@@ -80,24 +83,25 @@ const UpdateTask = () => {
         if(task.estado === 'En progreso' || task.estado === 'Pendiente'){
             task.estado_tarea = 'M';
             const response = await axios.put(`http://localhost:3005/api/tareas/${taskId}`, task);
-            alert("Tarea actualizada con éxito");
+            //alert("Tarea actualizada con éxito");
+            showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
             navigate1("/tasklist", { state: { user } });
         }else {
-            alert("La tarea no puede cambiar al estado Completada");
+          showAlert("info", "La tarea no puede cambiar al estado Completada", "var(--blue-progress)");
+          //alert("La tarea no puede cambiar al estado Completada");
         }
       } else if(estadoinicial === 'En progreso'){
         if(task.estado === 'Completada' || task.estado === 'En progreso'){
             task.estado_tarea = 'M';
             const response = await axios.put(`http://localhost:3005/api/tareas/${taskId}`, task);
-            alert("Tarea actualizada con éxito");
+            //alert("Tarea actualizada con éxito");
+            showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
             navigate1("/tasklist", { state: { user } });
         }else {
-            alert("La tarea no puede cambiar al estado Pendiente");
+          showAlert("info", "La tarea no puede cambiar al estado pendiente", "var(--blue-progress)");  
+          //alert("La tarea no puede cambiar al estado Pendiente");
         }
       }
-      
-      
-      
     } catch (error) {
       setError("Error al actualizar la tarea");
     }
@@ -114,47 +118,51 @@ const UpdateTask = () => {
     navigate1("/tasklist", { state: { user } }); // Envía el usuario de vuelta
   };
   return (
-    <div className="update-task-container">
-      <h2>Actualizar Tarea</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="titulo">Título</label>
-          <input
-            type="text"
-            id="titulo"
-            name="titulo"
-            value={task.titulo}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="descripcion">Descripción</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            value={task.descripcion}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="estado">Estado</label>
-          <select
-            id="estado"
-            name="estado"
-            value={task.estado}
-            onChange={handleEstadoChange}
-            required>
-            <option value="Pendiente">Pendiente</option>
-            <option value="En progreso">En progreso</option>
-            <option value="Completada">Completada</option>
-          </select>
-        </div>
-        <button type="submit">Actualizar</button>
-        <button type="button" onClick={handleBack}>Volver</button>
-      </form>
+    <div>
+      <Header user = {user}/>
+      <div className="update-task-container">
+        <h2>Actualizar Tarea</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="titulo">Título</label>
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              value={task.titulo}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              value={task.descripcion}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="estado">Estado</label>
+            <select
+              id="estado"
+              name="estado"
+              value={task.estado}
+              onChange={handleEstadoChange}
+              required>
+              <option value="Pendiente">Pendiente</option>
+              <option value="En progreso">En progreso</option>
+              <option value="Completada">Completada</option>
+            </select>
+          </div>
+          <button type="submit">Actualizar</button>
+          <button type="button" onClick={handleBack}>Volver</button>
+        </form>
+      </div>
     </div>
+    
   );
 };
 

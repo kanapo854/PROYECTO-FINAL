@@ -6,16 +6,18 @@ import Tasks from './components/TaskList';
 import UpdateTask from "./components/UpdateTask";
 import CreateTask from "./components/CreateTask";
 import ResetPassword from "./components/ResetPassword"; 
+import CreateUser from './components/CreateUser';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/create-task" element={<CreateTask />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element = {<Login/>}/>
         <Route path="/tasklist" element = {<Tasks/>}/>
         <Route path="/update-task/:taskId" element = {<UpdateTask/>}/>
-        <Route path="/create-task" element={<CreateTask />} />
-        <Route path="/reset-password/:userid" element={<ResetPassword />} />
+        <Route path="/create-user" element={<CreateUser />} />
       </Routes>
     </Router>
   );

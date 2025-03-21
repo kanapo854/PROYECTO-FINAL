@@ -19,7 +19,7 @@ const Login = () => {
 
     // Realiza una petición POST al backend para autenticar al usuario
     try {
-      const response = await axios.post('http://localhost:3005/api/login', {
+      const response = await axios.post('http://localhost:3006/api/login', {
         email,
         contrasena,
       });
@@ -70,7 +70,12 @@ const Login = () => {
           />
         </div>
         <div>
-          <Link to="/reset-password">Restablecer contraseña</Link>
+          <p>Olvidaste tu contraseña?  
+            <Link to="/reset-password">Restablecer contraseña</Link>
+          </p>
+          <p>No tienes cuenta?  
+            <Link to="/create-user" className="register-link"> Regístrate aquí</Link>
+          </p>
         </div>
         <button type="submit">Iniciar sesión</button>
       </form>
