@@ -4,6 +4,8 @@ import axios from "axios";
 import "./CreateTask.css";
 import Header from "./Header";
 import showAlert from './Alert';
+import {jwtDecode} from "jwt-decode";
+import Cookies from "js-cookie";
 
 const CreateTask = () => {
   const [task, setTask] = useState({
@@ -12,9 +14,19 @@ const CreateTask = () => {
     estado: "Pendiente", // Estado fijo y no editable
   });
 
-  const location = useLocation();
-  const { user } = location.state || {}; // Recuperamos los datos del usuario
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+   // Obtener el usuario desde el token en las cookies
+   const getUserFromToken = () => {
+    const token = Cookies.get("token");  // Obtener el token de las cookies
+    if (!token) {
+      showAlert("error", "No se encontró el token. Usuario no autenticado.", "var(--red-error)");
+      return null;
+    }
+    const decodedToken = jwtDecode(token);  // Decodificamos el token
+    return decodedToken;  // Retornamos el contenido del token (usuario)
+  };
+
+  const user = getUserFromToken();  // Obtenemos el usuario
 
   // Manejar cambios en los inputs del formulario
   const handleChange = (e) => {
@@ -46,7 +58,7 @@ const CreateTask = () => {
       //alert("Tarea creada con éxito");
       showAlert("success", "Tarea creada con éxito", "var(--verde-success)");
       // Redirigir a la lista de tareas
-      navigate("/tasklist", { state: { user } });
+      navigate("/tasklist");
     } catch (error) {
       //alert("Error al crear la tarea");
       showAlert("error", "Error al crear la tarea", "var(--red-error)");
@@ -55,7 +67,7 @@ const CreateTask = () => {
 
   return (
     <div>
-      <Header user = {user}/>
+      <Header/>
       <div className="create-task-container">
         <h2>Crear Nueva Tarea</h2>
         <form onSubmit={handleSubmit}>

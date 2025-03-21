@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, useNavigate} from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import axios from "axios";
 import "./UpdateTask.css";
 import Header from "./Header";
 import showAlert from "./Alert";
+import {jwtDecode} from "jwt-decode";
+import Cookies from "js-cookie";
 
 const UpdateTask = () => {
   //const [task, setTask] = useState(null);
@@ -12,51 +14,64 @@ const UpdateTask = () => {
 
   // Obtener el taskId de la URL y user de la location state
   const { taskId } = useParams();
-  const location = useLocation();
-  const { user } = location.state || {}; // Recuperamos los datos del usuario
+  //const { user } = location.state || {}; // Recuperamos los datos del usuario
   const navigate1 = useNavigate(); 
-  //console.log(taskId);
-  //console.log(user);
+
   const [task, setTask] = useState({
     titulo: "",
     descripcion: "",
     estado: "",
   });
-  // Guardar el estado inicial
-  /*const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);*/
 
   // Obtener la tarea con el ID
   useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);
-        //console.log(response.data);
-        //Buscar la tarea especificada por taskId
-        const tareaEncontrada = response.data.find(t => t.IDTarea === Number(taskId));
-        //console.log(tareaEncontrada);
-        if(tareaEncontrada){
-            setTask({
-                titulo: tareaEncontrada.titulo,
-                descripcion: tareaEncontrada.descripcion,
-                estado: tareaEncontrada.estado
-            });
+    const token = Cookies.get("token");
+    if(token){
+      try{
+        // Decodificar el token para obtener el usuario
+        const decodedToken = jwtDecode(token);
+        const user = {
+          IDUsuario: decodedToken.id,
+          email: decodedToken.email,
+        };
+        //hacer la solicitud get para obtener la tarea por IDUsuario
+        const fetchTask = async () => {
+          try {
+            const response = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);
+            //Buscar la tarea especificada por taskId
+            const tareaEncontrada = response.data.find(t => t.IDTarea === Number(taskId));
+            //console.log(tareaEncontrada);
+            if(tareaEncontrada){
+                setTask({
+                    titulo: tareaEncontrada.titulo,
+                    descripcion: tareaEncontrada.descripcion,
+                    estado: tareaEncontrada.estado
+                });
+                
+                setLoading(false);
+            }else {
+                setLoading(false);
+            }
+            //setTask(response.data);
             
+          } catch (error) {
+            showAlert("error", "Error al obtener la tarea", "var(--red-error)");
+            setError("Error al obtener la tarea");
             setLoading(false);
-        }else {
-            setLoading(false);
-        }
-        //setTask(response.data);
-        
-      } catch (error) {
-        showAlert("error", "Error al obtener la tarea", "var(--red-error)");
-        setError("Error al obtener la tarea");
+          }
+        };
+        fetchTask();
+      }catch(error){
+        showAlert("error", "Error al decodificar el token", "var(--red-error)");
+        setError("Error al decodificar el token");
         setLoading(false);
       }
-    };
-
-    fetchTask();
-  }, [taskId, user]);
+    }else {
+      showAlert("error", "No se ha encontrado el token", "var(--red-error)");
+      setError("No se ha encontrado el token");
+      setLoading(false);
+    }
+  }, [taskId]);
 
   // Manejar los cambios en los inputs del formulario
   const handleChange = (e) => {
@@ -76,7 +91,18 @@ const UpdateTask = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const responseobject = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);  
+      // Decodificar el token desde las cookies
+      const token = Cookies.get("token");
+      
+      if (!token) {
+        showAlert("error", "No se encontró el token. Usuario no autenticado.", "var(--red-error)");
+        return;
+      }
+      
+      const decodedToken = jwtDecode(token);
+      const IDUsuario = decodedToken.id; 
+      //Realizar la peticion Get
+      const responseobject = await axios.get(`http://localhost:3005/api/tareas/${IDUsuario}`);  
       const tareainicial = responseobject.data.find(t => t.IDTarea === Number(taskId));
       const estadoinicial = tareainicial.estado;
       if(estadoinicial === 'Pendiente'){
@@ -85,7 +111,7 @@ const UpdateTask = () => {
             const response = await axios.put(`http://localhost:3005/api/tareas/${taskId}`, task);
             //alert("Tarea actualizada con éxito");
             showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
-            navigate1("/tasklist", { state: { user } });
+            navigate1("/tasklist");
         }else {
           showAlert("info", "La tarea no puede cambiar al estado Completada", "var(--blue-progress)");
           //alert("La tarea no puede cambiar al estado Completada");
@@ -96,7 +122,7 @@ const UpdateTask = () => {
             const response = await axios.put(`http://localhost:3005/api/tareas/${taskId}`, task);
             //alert("Tarea actualizada con éxito");
             showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
-            navigate1("/tasklist", { state: { user } });
+            navigate1("/tasklist");
         }else {
           showAlert("info", "La tarea no puede cambiar al estado pendiente", "var(--blue-progress)");  
           //alert("La tarea no puede cambiar al estado Pendiente");
@@ -115,11 +141,11 @@ const UpdateTask = () => {
     return <p>{error}</p>;
   }
   const handleBack = () => {
-    navigate1("/tasklist", { state: { user } }); // Envía el usuario de vuelta
+    navigate1("/tasklist"); // Envía el usuario de vuelta
   };
   return (
     <div>
-      <Header user = {user}/>
+      <Header/>
       <div className="update-task-container">
         <h2>Actualizar Tarea</h2>
         <form onSubmit={handleSubmit}>

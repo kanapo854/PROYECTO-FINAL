@@ -2,11 +2,20 @@ import React, { useState } from "react";
 //import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // Importamos useNavigate
 import "./Header.css";
+import {jwtDecode} from "jwt-decode";
+import Cookies from "js-cookie";
 
-
-const Header = ({ user }) => {
+const Header = () => {
   const [showButton, setShowButton] = useState(false);
   const navigate = useNavigate(); // Inicializamos useNavigate
+  const token = Cookies.get("token");
+  // Decodificar el token para obtener el usuario
+  const decodedToken = jwtDecode(token);
+  const user = {
+    IDUsuario: decodedToken.id,
+    email: decodedToken.email,
+  };
+  
   if(!user || !user.email){
     return <p>Cargando datos...</p>
   }

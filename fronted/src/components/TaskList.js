@@ -4,8 +4,8 @@ import Header from "./Header";
 import { useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
 import showAlert from "./Alert";
-//import Cookies from "js-cookie";
-//import jwtDecode from "jwt-decode";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
 
   const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -17,32 +17,45 @@ import showAlert from "./Alert";
   const [descripcionFilter, setDescripcionFilter] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const {user} = location.state || {};
-  
-  //console.log(user);
+  //const {user} = location.state || {};
   useEffect(() => {
-    //verificamos si el usuario esta autenticado
-    if(user){
-      //hacer la solicitud Get para obtener las tareas
-      const fetchTask = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);
-          setTasks(response.data);
-          setLoading(false);   
-        }catch (error){
-          showAlert("error", "Error al obtener las tareas", "var(--red-error)");
-          setError("Error al obtener las tareas");
-          setLoading(false);
-        }
-      };
-      fetchTask();
-    }else {
-      showAlert("error", "No se ha encontrado el usuario", "var(--red-error)");
-      setError("No se ha encontrado el usuario");
+    // Obtener el token de la cookie
+    const token = Cookies.get('token');
+    
+    if (token) {
+      try {
+        // Decodificar el token para obtener el usuario
+        const decodedToken = jwtDecode(token);
+        const user = {
+          IDUsuario: decodedToken.id,
+          email: decodedToken.email,
+        };
+
+        // Hacer la solicitud GET para obtener las tareas
+        const fetchTask = async () => {
+          try {
+            const response = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);
+            setTasks(response.data);
+            setLoading(false);   
+          } catch (error) {
+            showAlert("error", "Error al obtener las tareas", "var(--red-error)");
+            setError("Error al obtener las tareas");
+            setLoading(false);
+          }
+        };
+        fetchTask();
+      } catch (error) {
+        showAlert("error", "Error al decodificar el token", "var(--red-error)");
+        setError("Error al decodificar el token");
+        setLoading(false);
+      }
+    } else {
+      showAlert("error", "No se ha encontrado el token", "var(--red-error)");
+      setError("No se ha encontrado el token");
       setLoading(false);
     }
-  },
-  [user]);
+  }, []);
+  
   useEffect(()=> {
     // Aplicar los filtros a las tareas
     let filtered = tasks;
@@ -76,24 +89,24 @@ import showAlert from "./Alert";
   const handleUpdateClick = (taskId) => {
     console.log(taskId);
     // Redirigir a la página de actualización y pasar tanto taskId como user
-    navigate(`/update-task/${taskId}`, { state: { taskId, user } });
+    navigate(`/update-task/${taskId}`, { state: { taskId} });
   };
   const handleDelete = async (taskId) => {
     try {
       await axios.delete(`http://localhost:3005/api/tareas/${taskId}`);
       const updatedTasks = tasks.filter(task => task.id !== taskId);
       setTasks(updatedTasks);
-      navigate("/tasklist", { state: { user } });
+      navigate("/tasklist");
     } catch (error) {
       console.error('Error eliminando la tarea:', error);
     }
   };
   const handleCreateTask = () => {
-    navigate("/create-task", { state: { user } }); // Enviamos los datos del usuario en el estado
+    navigate("/create-task");
   };
   return (
     <div>
-      <Header user = {user}/>
+      <Header/>
       <div className="tasks-container">
         <h2>Mis Tareas</h2>
           <div className="filters">
