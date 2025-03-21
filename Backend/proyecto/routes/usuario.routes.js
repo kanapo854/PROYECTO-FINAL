@@ -5,7 +5,7 @@ const {obtenerUsuarios, crearUsuario, obtenerUsuarioPorId, actualizarUsuario, el
 router.get('/usuarios', obtenerUsuarios);
 router.post('/usuarios', crearUsuario);
 router.get('/usuarios/:id', obtenerUsuarioPorId);
-router.put('/usuarios/:id', actualizarUsuario);
+router.put('/usuarios/:email', actualizarUsuario);
 router.delete('usuarios/:id', eliminarUsuario);
 
 module.exports = router;

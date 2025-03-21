@@ -2,7 +2,7 @@
     background-color: var(--color-9);
     color: white;
     padding: 0px;
-    height: 100px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -32,7 +32,7 @@
   }
   .logout{
     position:absolute;
-    top: 50%;
+    top: 40%;
     right:0;
     margin-top: 5px;
     padding: 8px 12px; 

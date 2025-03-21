@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Usuario } = require('../models');
 
+
 // Clave secreta para firmar el token (coloca esto en tus variables de entorno en producción)
 const SECRET_KEY = "tu_clave_secreta"; 
 
@@ -33,7 +34,7 @@ exports.iniciarSesion = async (req, res) => {
         res.json({
             mensaje: "Inicio de sesión exitoso",
             usuario: {
-                id: usuario.id,
+                IDUsuario: 1,
                 nombre: usuario.nombre,
                 apellido: usuario.apellido,
                 email: usuario.email

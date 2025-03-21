@@ -22,7 +22,11 @@ exports.obtenerUsuarioPorId = async (req, res) => {
     if (!usuario) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    res.json(usuario);
+    res.status(201).json({
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      email: usuario.email
+    });
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener el usuario' });
   }
@@ -55,8 +59,37 @@ exports.crearUsuario = async (req, res) => {
   }
 };*/
 
-// Actualizar un usuario por ID
+//Actualizr usuario por email
 exports.actualizarUsuario = async (req, res) => {
+  try {
+    // Buscar el usuario por el email
+    const usuario = await Usuario.findOne({ where: { email: req.params.email } });
+    
+    // Si no se encuentra el usuario
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    
+    // Verificar si la contraseña está siendo actualizada
+    if (req.body.contrasena && req.body.contrasena !== usuario.contrasena) {
+      req.body.contrasena = await bcrypt.hash(req.body.contrasena, 10);
+    }
+
+    // Actualizar los datos del usuario
+    await usuario.update(req.body);
+    
+    // Retornar los datos actualizados
+    res.status(200).json({
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      email: usuario.email
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar el usuario' });
+  }
+};
+// Actualizar un usuario por ID
+/*exports.actualizarUsuario = async (req, res) => {
     try {
       const usuario = await Usuario.findByPk(req.params.id);
       if (!usuario) {
@@ -77,7 +110,7 @@ exports.actualizarUsuario = async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: 'Error al actualizar el usuario' });
     }
-};
+};*/
 /*exports.actualizarUsuario = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.params.id);

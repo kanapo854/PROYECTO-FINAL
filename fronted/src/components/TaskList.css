@@ -1,5 +1,5 @@
 .tasks-container {
-    max-width: 500px;
+    max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
     background: var(--background-color);
@@ -11,12 +11,15 @@
   .tasks-list {
     list-style: none;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
   
   .task-card {
-    background: white;
+    background: var(--color-4);
     padding: 15px;
-    margin: 10px 0;
+    /*margin: 10px 0;*/
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -37,13 +40,26 @@
     border-radius: 4px;
     font-weight: bold;
   }
-  
+  .task-button{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  button{
+    padding: 10px 20px;
+    background-color: var(--texto-color-1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
   .status.pendiente {
     background: orange;
     color: white;
   }
   
-  .status.completado {
+  .status.completada {
     background: green;
     color: white;
   }
@@ -52,3 +68,32 @@
     background: blue;
     color: white;
   }
+
+  /*Estilos de Filters*/
+  .filters {
+    margin-bottom: 20px;
+  }
+  
+  .filters input, .filters select {
+    padding: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .filters input {
+    width: 200px;
+  }
+  
+  .filters select {
+    width: 150px;
+  }
+/* Eliminar subrayado de los enlaces */
+.no-underline {
+  text-decoration: none;
+}
+
+.no-underline:visited {
+  color: inherit;
+}

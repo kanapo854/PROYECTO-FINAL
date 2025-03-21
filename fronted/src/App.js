@@ -3,13 +3,21 @@ import './App.css';
 import Login from './components/Login';
 import './styles/variables.css';
 import Tasks from './components/TaskList';
-import Header from "./components/Header";
+import UpdateTask from "./components/UpdateTask";
+import CreateTask from "./components/CreateTask";
+import ResetPassword from "./components/ResetPassword"; 
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 function App() {
   return (
-    <div className="App">
-      <Header/>
-      <Tasks/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element = {<Login/>}/>
+        <Route path="/tasklist" element = {<Tasks/>}/>
+        <Route path="/update-task/:taskId" element = {<UpdateTask/>}/>
+        <Route path="/create-task" element={<CreateTask />} />
+        <Route path="/reset-password/:userid" element={<ResetPassword />} />
+      </Routes>
+    </Router>
   );
 }
 

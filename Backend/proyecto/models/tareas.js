@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    estado_tarea: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
   });
 
   Tarea.associate = (models) => {
