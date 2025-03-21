@@ -16,7 +16,6 @@ import {jwtDecode} from "jwt-decode";
   const [tituloFilter, setTituloFilter] = useState("");
   const [descripcionFilter, setDescripcionFilter] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
   //const {user} = location.state || {};
   useEffect(() => {
     // Obtener el token de la cookie
