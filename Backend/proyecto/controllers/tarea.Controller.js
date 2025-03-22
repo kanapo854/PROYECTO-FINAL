@@ -26,7 +26,7 @@ exports.obtenerTareaPorId = async (req, res) => {
 // Crear una nueva tarea
 exports.crearTarea = async (req, res) => {
   try {
-    const { titulo, descripcion, estado, IDUsuario} = req.body;
+    const { titulo, descripcion, estado, IDUsuario,fecha} = req.body;
 
     // Verificar si el usuario existe
     const usuario = await Usuario.findByPk(IDUsuario);
@@ -35,7 +35,7 @@ exports.crearTarea = async (req, res) => {
     }
     const estado_tarea = "A";
 
-    const tarea = await Tarea.create({ titulo, descripcion, estado, IDUsuario, estado_tarea});
+    const tarea = await Tarea.create({ titulo, descripcion, estado, IDUsuario, estado_tarea,fecha});
     res.status(201).json(tarea);
   } catch (error) {
     res.status(500).json({ error: 'Error al crear la tarea' });
