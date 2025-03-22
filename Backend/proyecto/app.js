@@ -18,6 +18,10 @@ app.use('/api', authRoutes);
 
 const PORT = process.env.PORT || 3005;
 
-app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
+app.get('/', (req, res) => {
+    res.send('Servidor corriendo correctamente');
+});
+
+//app.listen(PORT, () => console.log(`Servidor corriendo en http://localhost:${PORT}`));
 
 module.exports = app;
