@@ -38,7 +38,7 @@ import showAlert from "./Alert";
         // Hacer la solicitud GET para obtener las tareas
         const fetchTask = async () => {
           try {
-            const response = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/tareas/${user.IDUsuario}`);
             setTasks(response.data);
             setLoading(false);   
           } catch (error) {
