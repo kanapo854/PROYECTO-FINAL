@@ -1,0 +1,100 @@
+:root{
+    --light-gray: #c0c3c2;
+    --gray-1: #83807e;
+    --gray-2:#4a544e;
+    --dark-brown: #3b2d25;
+    --brown:#723c36;
+    --light-yellow:#f4e56d;
+    --yellow-orange: #ceaa46;
+    --light-pink: #d79497;
+    --variant_black:#090706;
+    --piel:#cbb1a1;
+    --other: #ebe4e1; 
+
+    /*Pleta morados*/
+    --color-1: #eae4e9;
+    --color-2: #fff1e6; /*fondo tasklist*/
+    --color-3: #fde2e4;
+    --color-4: #fad2e1;
+    --color-5: #e2ece9;
+    --color-6: #bee1e6;/*fondo task-card*/
+    --color-7: #f0efeb;
+    --color-8: #dfe7fd;
+    --color-9: #cddafd;
+    --color-10: #eae4e9;
+    --color-11: #eae4e9;
+    --color-12: #eae4e9;
+
+    /*Colores texto*/
+    --texto-color-1: #0fa3b1; 
+    --texto-color-2: #b5e2fa;
+    --texto-color-3: #f9f7f3;
+    --texto-color-4: #eddea4;
+    --texto-color-5: #f7a072;
+    --texto-color-6: #8e7dbe;
+    --texto-color-7: #d88c9a;
+    --texto-color-8: #dfe7fd;
+    --texto-color-9: #cddafd;
+    --texto-color-10: #a87dbe;
+    --texto-color-11: #83d4fa;
+    --texto-color-12: #4ab0df;
+    --texto-color-13: #fffaaea1;
+    --texto-color-14: #067c86;
+    --texto-color-15: #054d53;
+    --success: #4740ac;
+    --progress: var(--gray-1);/*#9654e0;*/
+    --pendiente: var(--light-gray);/*#8179eb;*/
+    --red-error: #d64242;
+    --success-not:green; 
+
+    /**/
+    --background-header: var(--texto-color-6);
+    --texto-color-titule: var(--texto-color-6);
+    --background-tasklist: var(--color-2);
+    --background-task-card:var(--color-6);
+    --background-button-logout: var(--texto-color-1);
+    --font-family: 'Times New Roman', Times, serif;
+}
+/* stilos que se comparten entre paginas*/
+body{
+    background-color: var(--background-tasklist);
+}
+.title{
+    color: var(--texto-color-15);
+    font-size: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-family: var(--font-family);
+  }
+
+  .task-button button {
+    padding: 10px 20px;
+    background-color: var(--background-header) !important;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 30%;
+    text-align: center;
+    font-family: var(--font-family);
+    font-size: large;
+  }
+
+  .task-button button:hover{
+    background-color: var(--texto-color-15) !important;
+  }
+  
+  .task-button{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  @media (max-width: 560px) {
+    .title{
+      font-size: 30px;
+    }
+    .task-button button {
+        font-size: 15px;
+    }
+  }

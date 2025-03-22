@@ -1,0 +1,80 @@
+.create-user-container {
+  width: 100%;
+  max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: var(--texto-color-8);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--success);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Centrar el formulario en el medio de la pantalla */
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    border: 4px solid var(--success);
+    transform: translate(-50%, -50%); /* Mover el formulario al centro */
+    text-align: center;
+  }
+  
+  .create-user-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    display:block;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--texto-color-6);
+    color: var(--texto-color-6) !important;
+    border-radius: 4px;
+    width: 95%;
+    margin-top: 5px;
+  }
+  .password-container {
+    position: relative; /* Contenedor relativo para colocar el icono de manera absoluta */
+  }
+  
+  .password-container input {
+    width: calc(100% - 40px); /* Reducir el ancho para hacer espacio para el ícono */
+    padding-right: 30px; /* Espacio adicional para el ícono a la derecha */
+  }
+  
+  .password-toggle-icon {
+    position: absolute;
+    right: 10px; /* Posicionar el icono al final del campo */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  .success-message {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: center;
+  }
+  .task-button{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
