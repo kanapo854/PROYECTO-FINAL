@@ -32,7 +32,7 @@ const UpdateTask = () => {
         //hacer la solicitud get para obtener la tarea por IDUsuario
         const fetchTask = async () => {
           try {
-            const response = await axios.get(`http://localhost:3005/api/tareas/${user.IDUsuario}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/tareas/${user.IDUsuario}`);
             //Buscar la tarea especificada por taskId
             const tareaEncontrada = response.data.find(t => t.IDTarea === Number(taskId));
             //console.log(tareaEncontrada);
@@ -97,7 +97,7 @@ const UpdateTask = () => {
       const decodedToken = jwtDecode(token);
       const IDUsuario = decodedToken.id; 
       //Realizar la peticion Get
-      const responseobject = await axios.get(`http://localhost:3005/api/tareas/${IDUsuario}`);  
+      const responseobject = await axios.get(`${process.env.REACT_APP_API_URL}/tareas/${IDUsuario}`);  
       const tareainicial = responseobject.data.find(t => t.IDTarea === Number(taskId));
       const estadoinicial = tareainicial.estado;
       if(estadoinicial === 'Pendiente'){
