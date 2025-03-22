@@ -19,6 +19,7 @@ const UpdateTask = () => {
     titulo: "",
     descripcion: "",
     estado: "",
+    fecha: "",
   });
 
   // Obtener la tarea con el ID
@@ -40,7 +41,8 @@ const UpdateTask = () => {
                 setTask({
                     titulo: tareaEncontrada.titulo,
                     descripcion: tareaEncontrada.descripcion,
-                    estado: tareaEncontrada.estado
+                    estado: tareaEncontrada.estado,
+                    fecha:tareaEncontrada.fecha
                 });
                 
                 setLoading(false);
