@@ -1,10 +1,11 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Usuario } = require('../models');
 
-
-// Clave secreta para firmar el token (coloca esto en tus variables de entorno en producción)
-const SECRET_KEY = "tu_clave_secreta"; 
+// Clave secreta para firmar el token 
+const SECRET_KEY = process.env.JWT_SECRET;
+//const SECRET_KEY = "tu_clave_secreta"; 
 
 exports.iniciarSesion = async (req, res) => {
     try {
@@ -32,22 +33,21 @@ exports.iniciarSesion = async (req, res) => {
         );
 
         // Configurar la cookie HttpOnly para el token
-        res.cookie("token", token, {
+        /*res.cookie("tokenc", token, {
             httpOnly: true, // No accesible desde JavaScript
-            secure: process.env.NODE_ENV === "production", // Solo en HTTPS en producción
-            sameSite: "Strict", // Protege contra CSRF
-            maxAge: 2 * 60 * 60 * 1000 // 2 horas de expiración
-        });
+            secure: false, // Solo en HTTPS en producción
+            sameSite: "Lax", // Protege contra CSRF
+            maxAge:  3600000 // 2 horas de expiración
+        });*/
         
         res.json({
             mensaje: "Inicio de sesión exitoso",
             usuario: {
-                IDUsuario: 1,
+                IDUsuario: usuario.IDUsuario,
                 nombre: usuario.nombre,
                 apellido: usuario.apellido,
                 email: usuario.email
-            },
-            token
+            }, token
         });
 
     } catch (error) {

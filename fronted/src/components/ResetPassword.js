@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import "./ResetPassword.css";
+import { useNavigate } from "react-router-dom";
+import "../styles/ResetPassword.css";
 import showAlert from './Alert';
-
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 const ResetPassword = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { email } = location.state || {};
-  //const [userId, setUserId] = useState("123"); 
-  
+
+  // Maneja el cambio de email
+  const handleEmailChange = (e) => setEmail(e.target.value);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -23,25 +27,24 @@ const ResetPassword = () => {
       {
         //alert("La contraeña no cumple con los requisitos");
         showAlert("error", "La contraseña no cumple los requisitos necesarios", "var(--red-error)");
-        setError("La contraseña debe tener al menos una mayúscula, un número, una minúscula y uno de estos símbolos: #, $, %, &.");
         return;
       }
   
       try 
       {
         // Realizar la solicitud para actualizar la contraseña en el servidor
-        const response = await axios.put(`http://localhost:3005/api/usuarios/1`, {
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/usuarios`, {
+            email,
             contrasena: password,  // Enviamos la nueva contraseña
           });
   
-        if (response.status === 201) {
-          alert("Contraseña actualizada con éxito");
+        if (response.status === 200) {
           showAlert("success", "Contraseña actualizada con éxito", "var(--ver-success)");
           // Redirigir a login o alguna otra página según sea necesario
+          handleBack();
         }
       } catch (error) {
         showAlert("error", "Error al restablecer la contraseña", "var(--red-error)");
-        setError("Error al restablecer la contraseña");
       }
   };
   const handleBack = () => {
@@ -62,15 +65,34 @@ const ResetPassword = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="password">Nueva Contraseña</label>
+          <label htmlFor="email">Correo Electrónico</label>
           <input
-            type="password"
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Nueva Contraseña</label>
+          <div className='password-container'>
+          <input
+            type={showPassword ? 'text' : 'password'}
             id="password"
             name="contrasena"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <span
+            className="password-toggle-icon"
+            onClick={togglePasswordVisibility} // Llamar a la función para alternar
+             >
+            {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Mostrar ícono según el estado */}
+            </span>
+          </div>
         </div>
         <div className="task-button">
         <button type="submit">Restablecer</button>

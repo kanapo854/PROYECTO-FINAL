@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import {useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./CreateTask.css";
+import "../styles/CreateTask.css";
 import Header from "./Header";
 import showAlert from './Alert';
 import {jwtDecode} from "jwt-decode";
-import Cookies from "js-cookie";
 
 const CreateTask = () => {
   const [task, setTask] = useState({
@@ -17,7 +16,8 @@ const CreateTask = () => {
     const navigate = useNavigate();
    // Obtener el usuario desde el token en las cookies
    const getUserFromToken = () => {
-    const token = Cookies.get("token");  // Obtener el token de las cookies
+    //const token = Cookies.get("tokenc");  // Obtener el token de las cookies
+    const token = localStorage.getItem('token');
     if (!token) {
       showAlert("error", "No se encontró el token. Usuario no autenticado.", "var(--red-error)");
       return null;
@@ -27,7 +27,9 @@ const CreateTask = () => {
   };
 
   const user = getUserFromToken();  // Obtenemos el usuario
-
+  const handleBack = () => {
+    navigate("/tasklist"); // Envía el usuario de vuelta
+  };
   // Manejar cambios en los inputs del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,9 +50,9 @@ const CreateTask = () => {
 
     try {
       // Hacer la solicitud para crear la tarea, sin necesidad de pasar el estado
-      await axios.post("http://localhost:3005/api/tareas", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/tareas`, {
         ...task,
-        IDUsuario: user.IDUsuario, // Asociamos la tarea con el ID del usuario
+        IDUsuario: user.id, // Asociamos la tarea con el ID del usuario
         estado: "Pendiente",
         estado_tarea: "A" // El estado siempre será "Pendiente"
       });
@@ -64,50 +66,63 @@ const CreateTask = () => {
       showAlert("error", "Error al crear la tarea", "var(--red-error)");
     }
   };
-
+  
   return (
     <div>
       <Header/>
       <div className="create-task-container">
-        <h2>Crear Nueva Tarea</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="titulo">Título</label>
-            <input
-              type="text"
-              id="titulo"
-              name="titulo"
-              value={task.titulo}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <h2 className="title">Crear Nueva Tarea</h2>
+        <div className="create-task">
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="titulo">Título</label>
+              <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                value={task.titulo}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div>
-            <label htmlFor="descripcion">Descripción</label>
-            <textarea
-              id="descripcion"
-              name="descripcion"
-              value={task.descripcion}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="estado">Estado</label>
-            <textarea
-              id="estado"
-              name="estado"
-              value="Pendiente"
-              required
-            />
-          </div>
-          {/* Aquí se omite el campo de selección de estado porque es siempre "Pendiente" */}
-          
-          <div>
-            <button type="submit">Crear Tarea</button>
-          </div>
-        </form>
+            <div>
+              <label htmlFor="descripcion">Descripción</label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                value={task.descripcion}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="fecha">Fecha</label>
+              <input
+                type="date"
+                name="fecha"
+                value={task.fecha}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="estado">Estado</label>
+              <textarea
+                id="estado"
+                name="estado"
+                value="Pendiente"
+                required
+              />
+            </div>
+            {/* Aquí se omite el campo de selección de estado porque es siempre "Pendiente" */}
+            
+            <div className="task-button">
+              <button type="submit">Crear Tarea</button>
+              <button type="button" onClick={handleBack}>Volver</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
     

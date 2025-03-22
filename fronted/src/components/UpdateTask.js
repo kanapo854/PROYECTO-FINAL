@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate} from "react-router-dom";
 import axios from "axios";
-import "./UpdateTask.css";
+import "../styles/UpdateTask.css";
 import Header from "./Header";
 import showAlert from "./Alert";
 import {jwtDecode} from "jwt-decode";
-import Cookies from "js-cookie";
-
 const UpdateTask = () => {
   //const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,15 +23,12 @@ const UpdateTask = () => {
 
   // Obtener la tarea con el ID
   useEffect(() => {
-    const token = Cookies.get("token");
+    //const token = Cookies.get("tokenc");
+    const token = localStorage.getItem('token');
     if(token){
       try{
         // Decodificar el token para obtener el usuario
-        const decodedToken = jwtDecode(token);
-        const user = {
-          IDUsuario: decodedToken.id,
-          email: decodedToken.email,
-        };
+        const user = JSON.parse(localStorage.getItem('user'));
         //hacer la solicitud get para obtener la tarea por IDUsuario
         const fetchTask = async () => {
           try {
@@ -91,8 +86,8 @@ const UpdateTask = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Decodificar el token desde las cookies
-      const token = Cookies.get("token");
+      // Decodificar el token desde el localstorage
+      const token = localStorage.getItem('token');
       
       if (!token) {
         showAlert("error", "No se encontró el token. Usuario no autenticado.", "var(--red-error)");
@@ -108,7 +103,7 @@ const UpdateTask = () => {
       if(estadoinicial === 'Pendiente'){
         if(task.estado === 'En progreso' || task.estado === 'Pendiente'){
             task.estado_tarea = 'M';
-            const response = await axios.put(`http://localhost:3005/api/tareas/${taskId}`, task);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/tareas/${taskId}`, task);
             //alert("Tarea actualizada con éxito");
             showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
             navigate1("/tasklist");
@@ -119,7 +114,7 @@ const UpdateTask = () => {
       } else if(estadoinicial === 'En progreso'){
         if(task.estado === 'Completada' || task.estado === 'En progreso'){
             task.estado_tarea = 'M';
-            const response = await axios.put(`http://localhost:3005/api/tareas/${taskId}`, task);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/tareas/${taskId}`, task);
             //alert("Tarea actualizada con éxito");
             showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
             navigate1("/tasklist");
@@ -147,45 +142,60 @@ const UpdateTask = () => {
     <div>
       <Header/>
       <div className="update-task-container">
-        <h2>Actualizar Tarea</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="titulo">Título</label>
-            <input
-              type="text"
-              id="titulo"
-              name="titulo"
-              value={task.titulo}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="descripcion">Descripción</label>
-            <textarea
-              id="descripcion"
-              name="descripcion"
-              value={task.descripcion}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="estado">Estado</label>
-            <select
-              id="estado"
-              name="estado"
-              value={task.estado}
-              onChange={handleEstadoChange}
-              required>
-              <option value="Pendiente">Pendiente</option>
-              <option value="En progreso">En progreso</option>
-              <option value="Completada">Completada</option>
-            </select>
-          </div>
-          <button type="submit">Actualizar</button>
-          <button type="button" onClick={handleBack}>Volver</button>
-        </form>
+        <h2 className="title">Actualizar Tarea</h2>
+        <div className="update-card">
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="titulo">Título</label>
+              <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                value={task.titulo}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="descripcion">Descripción</label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                value={task.descripcion}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="fecha">Fecha</label>
+              <input
+                type="date"
+                name="fecha"
+                value={task.fecha}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="estado">Estado</label>
+              <select
+                id="estado"
+                name="estado"
+                value={task.estado}
+                onChange={handleEstadoChange}
+                required>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En progreso">En progreso</option>
+                <option value="Completada">Completada</option>
+              </select>
+            </div>
+            <div className="task-button">
+              <button type="submit">Actualizar</button>
+              <button type="button" onClick={handleBack}>Volver</button>
+            </div>
+          </form>
+        </div>
+        
       </div>
     </div>
     

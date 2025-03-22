@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import "./TaskList.css";
+import "../styles/TaskList.css";
 import Header from "./Header";
-import { useLocation, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
 import showAlert from "./Alert";
-import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+//import Cookies from "js-cookie";
+//import {jwtDecode} from "jwt-decode";
+
 
   const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -15,20 +16,24 @@ import {jwtDecode} from "jwt-decode";
   const [estadoFilter, setEstadoFilter] = useState("");
   const [tituloFilter, setTituloFilter] = useState("");
   const [descripcionFilter, setDescripcionFilter] = useState("");
+  const [fechaFilter, setFechaFilter] = useState("");
   const navigate = useNavigate();
+  axios.defaults.withCredentials =true;
   //const {user} = location.state || {};
   useEffect(() => {
     // Obtener el token de la cookie
-    const token = Cookies.get('token');
-    
+    /*const token = Cookies.get('tokenc');*/
+    const token = localStorage.getItem('token');
+    //console.log(token);
     if (token) {
       try {
         // Decodificar el token para obtener el usuario
-        const decodedToken = jwtDecode(token);
-        const user = {
+        /*const decodedToken = jwtDecode(token);*/
+        const user = JSON.parse(localStorage.getItem('user'));
+        /*const user = {
           IDUsuario: decodedToken.id,
           email: decodedToken.email,
-        };
+        };*/
 
         // Hacer la solicitud GET para obtener las tareas
         const fetchTask = async () => {
@@ -38,19 +43,19 @@ import {jwtDecode} from "jwt-decode";
             setLoading(false);   
           } catch (error) {
             showAlert("error", "Error al obtener las tareas", "var(--red-error)");
-            setError("Error al obtener las tareas");
+            //setError("Error al obtener las tareas");
             setLoading(false);
           }
         };
         fetchTask();
       } catch (error) {
         showAlert("error", "Error al decodificar el token", "var(--red-error)");
-        setError("Error al decodificar el token");
+        //setError("Error al decodificar el token");
         setLoading(false);
       }
     } else {
       showAlert("error", "No se ha encontrado el token", "var(--red-error)");
-      setError("No se ha encontrado el token");
+      //setError("No se ha encontrado el token");
       setLoading(false);
     }
   }, []);
@@ -74,9 +79,18 @@ import {jwtDecode} from "jwt-decode";
         task.descripcion.toLowerCase().includes(descripcionFilter.toLowerCase())
       );
     }
+    if(fechaFilter){
+      // Convertir fechaFilter de "dd/MM/yyyy" a "yyyy-MM-dd"
+      const [day, month, year] = fechaFilter.split('/');
+      const formattedFechaFilter = `${day}`;
+      //console.log(formattedFechaFilter);
+      filtered = filtered.filter((task) =>
+        task.fecha.includes(formattedFechaFilter)
+      );
+    }
 
     setFilteredTasks(filtered);
-  }, [estadoFilter, tituloFilter, descripcionFilter, tasks]);
+  }, [estadoFilter, tituloFilter, descripcionFilter, fechaFilter, tasks]);
 
   if(loading){
     return <p>Cargando tareas...</p>
@@ -86,28 +100,40 @@ import {jwtDecode} from "jwt-decode";
     return <p>{error}</p>
   }
   const handleUpdateClick = (taskId) => {
-    console.log(taskId);
     // Redirigir a la página de actualización y pasar tanto taskId como user
     navigate(`/update-task/${taskId}`, { state: { taskId} });
   };
   const handleDelete = async (taskId) => {
-    try {
-      await axios.delete(`http://localhost:3005/api/tareas/${taskId}`);
-      const updatedTasks = tasks.filter(task => task.id !== taskId);
-      setTasks(updatedTasks);
-      navigate("/tasklist");
-    } catch (error) {
-      console.error('Error eliminando la tarea:', error);
+    const token = localStorage.getItem('token');
+    if(token){
+      try {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/tareas/${taskId}`);
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+        setTasks(updatedTasks);
+        showAlert("success", "Tarea eliminada correctamente", "var(--verde-success)");
+        navigate("/tasklist");
+        handleNavigateAndReload();
+      } catch (error) {
+        showAlert("error", "Error eliminando la tarea", "var(--red-error)");
+      }
+    }else {
+
     }
   };
   const handleCreateTask = () => {
     navigate("/create-task");
   };
+  const handleNavigateAndReload = () => {
+    navigate("/tasklist");  // Redirige a la página de la lista de tareas
+    window.location.reload();  // Fuerza la recarga de la página
+  };
   return (
     <div>
       <Header/>
+      
       <div className="tasks-container">
-        <h2>Mis Tareas</h2>
+        <h2 className="title">MIS TAREAS</h2>
+        
           <div className="filters">
             <input
               type="text"
@@ -121,6 +147,12 @@ import {jwtDecode} from "jwt-decode";
               value={descripcionFilter}
               onChange={(e) => setDescripcionFilter(e.target.value)}
             />
+            <input
+              type="date"
+              placeholder="Filtrar por fecha"
+              value={fechaFilter}
+              onChange={(e) => setFechaFilter(e.target.value)}
+            />
             <select
               value={estadoFilter}
               onChange={(e) => setEstadoFilter(e.target.value)}>
@@ -129,23 +161,39 @@ import {jwtDecode} from "jwt-decode";
               <option value="Completada">Completada</option>
               <option value="En progreso">En progreso</option>
             </select>
+            
           </div>
+          
           <ul className="tasks-list">
             {filteredTasks.map((task) => (
               <li key={task.id} className="task-card">
-                <h3>{task.titulo}</h3>
-                <p>{task.descripcion}</p>
-                <span className={`status ${task.estado.toLowerCase().replace(" ", "-")}`}>
-                {task.estado}
-                </span>
-                <div className="task-button">
-                  {task.estado.toLowerCase() !== "completada" && (<button className="no-underline" onClick={()=> handleUpdateClick(task.IDTarea)}>Actualizar tarea</button>)}
-                  {task.estado.toLowerCase() !== "completada" && (<button className="no-underline" onClick={()=> handleDelete(task.IDTarea)}>Eliminar tarea</button>)}
+                <h3>{task.titulo.toUpperCase()}</h3>
+                <div className="task-dates">
+                  <div className="task-texto">
+                    <div className="task-des">
+                      <p className="task-des-p">{task.descripcion}</p>
+                    </div>
+                    <div className="task-date">
+                      <p className="task-date-p">Fecha: {task.fecha}</p>
+                    </div>
+                  </div>
+                  <div className={`status ${task.estado.toLowerCase().replace(" ", "-")}`}>
+                    <span className={`status-span ${task.estado.toLowerCase().replace(" ", "-")}`}>
+                    {task.estado}
+                  </span>
+                  </div>
                 </div>
+                <div className="task-actions">
+                  <div className="task-button">
+                    {task.estado.toLowerCase() !== "completada" && (<button className="no-underline" onClick={()=> handleUpdateClick(task.IDTarea)}>Actualizar tarea</button>)}
+                    {task.estado.toLowerCase() !== "completada" && (<button className="no-underline" onClick={()=> handleDelete(task.IDTarea)}>Eliminar tarea</button>)}
+                  </div>
+                </div>
+               
               </li>
             ))}
           </ul>
-          <div>
+          <div className="button-crear">
             <button onClick={handleCreateTask}>Crear Tarea</button>
           </div>
       </div>

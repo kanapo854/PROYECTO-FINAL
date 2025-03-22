@@ -1,28 +1,27 @@
 import React, { useState } from "react";
 //import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // Importamos useNavigate
-import "./Header.css";
-import {jwtDecode} from "jwt-decode";
-import Cookies from "js-cookie";
+import "../styles/Header.css";
 
 const Header = () => {
   const [showButton, setShowButton] = useState(false);
   const navigate = useNavigate(); // Inicializamos useNavigate
-  const token = Cookies.get("token");
+  //const token = Cookies.get("tokenc");
   // Decodificar el token para obtener el usuario
-  const decodedToken = jwtDecode(token);
-  const user = {
+  //const decodedToken = jwtDecode(token);
+  /*const user = {
     IDUsuario: decodedToken.id,
     email: decodedToken.email,
-  };
-  
+  };*/
+  const user = JSON.parse(localStorage.getItem('user'));
+  //console.log(user);
   if(!user || !user.email){
     return <p>Cargando datos...</p>
   }
   
   const handleLogout = () => {
     // Aquí puedes realizar cualquier lógica adicional de logout (como borrar el token o limpiar el estado)
-    // Redirigimos al login
+    localStorage.clear();
     navigate("/");
   };
   return (

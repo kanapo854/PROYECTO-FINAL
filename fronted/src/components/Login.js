@@ -2,43 +2,44 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; 
+import '../styles/Login.css'; 
 import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   // Maneja el cambio de los inputs
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleContrasenaChange = (e) => setContrasena(e.target.value);
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   // Maneja el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Realiza una petición POST al backend para autenticar al usuario
     try {
-      const response = await axios.post('http://localhost:3006/api/login', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
         email,
         contrasena,
-      });
-      //console.log('Usuario autenticado:', response.data);
-
-      //Guardar el token en localStorage o sesion Storage
-      localStorage.setItem('token', response.data.token);
-      //Datos del usuario que inicio sesion
-      ///console.log(response.data.usuario);
+      }
+    );
       const userData = {
         email: response.data.usuario.email,
         IDUsuario: response.data.usuario.IDUsuario,
         nombre: response.data.usuario.nombre,
         apellido: response.data.usuario.apellido
       };
-      const user = userData;
-      //console.log(user);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(userData));
+
       // Redirigir al usuario a la página de inicio o dashboard
-      navigate('/tasklist', {state: {user}});
+      navigate('/tasklist');
     } catch (error) {
       setError('Error al iniciar sesión. Verifique sus credenciales.');
     }
@@ -61,15 +62,23 @@ const Login = () => {
         </div>
         <div>
           <label htmlFor="contrasena">Contraseña</label>
-          <input
-            type="password"
-            id="contrasena"
-            value={contrasena}
-            onChange={handleContrasenaChange}
-            required
-          />
+          <div className='password-container'>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="contrasena"
+              value={contrasena}
+              onChange={handleContrasenaChange}
+              required
+            />
+            <span
+              className="password-toggle-icon"
+              onClick={togglePasswordVisibility} // Llamar a la función para alternar
+              >
+              {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Mostrar ícono según el estado */}
+            </span>
+          </div>
         </div>
-        <div>
+        <div className='change-password'>
           <p>Olvidaste tu contraseña?  
             <Link to="/reset-password">Restablecer contraseña</Link>
           </p>

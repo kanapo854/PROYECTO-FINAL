@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     estado_tarea: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
+    fecha: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
   });
 
   Tarea.associate = (models) => {
