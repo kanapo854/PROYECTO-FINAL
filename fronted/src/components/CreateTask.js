@@ -58,7 +58,7 @@ const CreateTask = () => {
       });
 
       //alert("Tarea creada con éxito");
-      showAlert("success", "Tarea creada con éxito", "var(--verde-success)");
+      showAlert("success", "Tarea creada con éxito", "var(--success-not)");
       // Redirigir a la lista de tareas
       navigate("/tasklist");
     } catch (error) {

@@ -105,7 +105,7 @@ const UpdateTask = () => {
             task.estado_tarea = 'M';
             const response = await axios.put(`${process.env.REACT_APP_API_URL}/tareas/${taskId}`, task);
             //alert("Tarea actualizada con éxito");
-            showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
+            showAlert("success", "Tarea actualizada con éxito", "var(--success-not)");
             navigate1("/tasklist");
         }else {
           showAlert("info", "La tarea no puede cambiar al estado Completada", "var(--blue-progress)");
@@ -116,7 +116,7 @@ const UpdateTask = () => {
             task.estado_tarea = 'M';
             const response = await axios.put(`${process.env.REACT_APP_API_URL}/tareas/${taskId}`, task);
             //alert("Tarea actualizada con éxito");
-            showAlert("success", "Tarea actualizada con éxito", "var(--verde-success)");
+            showAlert("success", "Tarea actualizada con éxito", "var(--success-not)");
             navigate1("/tasklist");
         }else {
           showAlert("info", "La tarea no puede cambiar al estado pendiente", "var(--blue-progress)");  

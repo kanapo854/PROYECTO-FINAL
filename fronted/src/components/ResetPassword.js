@@ -39,7 +39,7 @@ const ResetPassword = () => {
           });
   
         if (response.status === 200) {
-          showAlert("success", "Contraseña actualizada con éxito", "var(--ver-success)");
+          showAlert("success", "Contraseña actualizada con éxito", "var(--success-not)");
           // Redirigir a login o alguna otra página según sea necesario
           handleBack();
         }

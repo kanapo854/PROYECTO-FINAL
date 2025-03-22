@@ -44,7 +44,7 @@ const CreateUser = () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/usuarios`, formData);
       setSuccess("Usuario creado con éxito.");
-      showAlert("success", "Usuario creado con éxito", "var(--verde-success)");
+      showAlert("success", "Usuario creado con éxito", "var(--success-not)");
       setTimeout(() => navigate("/"), 2000); // Redirigir al login después de 2 segundos
     } catch (error) {
       setError("Error al crear el usuario. Inténtalo de nuevo.");
