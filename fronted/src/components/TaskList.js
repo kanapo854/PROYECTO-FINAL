@@ -110,7 +110,7 @@ import showAlert from "./Alert";
         await axios.delete(`${process.env.REACT_APP_API_URL}/tareas/${taskId}`);
         const updatedTasks = tasks.filter(task => task.id !== taskId);
         setTasks(updatedTasks);
-        showAlert("success", "Tarea eliminada correctamente", "var(--verde-success)");
+        showAlert("success", "Tarea eliminada correctamente", "var(--success-not)");
         navigate("/tasklist");
         handleNavigateAndReload();
       } catch (error) {

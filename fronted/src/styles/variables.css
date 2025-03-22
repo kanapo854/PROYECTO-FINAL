@@ -45,6 +45,7 @@
     --progress: var(--gray-1);/*#9654e0;*/
     --pendiente: var(--light-gray);/*#8179eb;*/
     --red-error: #d64242;
+    --success-not:green; 
 
     /**/
     --background-header: var(--texto-color-6);
