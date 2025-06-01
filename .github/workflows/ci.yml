@@ -1,32 +1,29 @@
-name: CI - Frontend React
+name: Frontend CI Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [ main ]
   pull_request:
-    branches: [main, develop]
+    branches: [ main ]
 
 jobs:
   test-frontend:
+    name: Run Frontend Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: fronted
 
     steps:
-      - name: Clonar repositorio
-        uses: actions/checkout@v3
-        
-      - name: Configurar Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      
-      - name: Instalar dependencias
+          node-version: '18.x'  # o la versión que uses
+
+      - name: Install dependencies (Frontend)
+        working-directory: ./fronted  # <-- Importante: Entra al directorio del frontend
         run: npm install
 
-      - name: Ejecutar pruebas con CI activado
+      - name: Run tests (Frontend)
+        working-directory: ./fronted  # <-- Ejecuta los tests dentro de /fronted
         run: CI=true npm test
-
-      - name: Análisis de código (lint)
-        run: npm run lint || true
