@@ -53,10 +53,10 @@ const CreateUser = () => {
   
   return (
     <div className="create-user-container">
-      <h2>Crear Usuarios</h2>
+      <h2>Crear Usuario</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="nombre">Nombres</label>
+          <label htmlFor="nombre">Nombre</label>
           <input
             id="nombre"
             type="text"
