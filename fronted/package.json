@@ -26,9 +26,9 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!axios)/"  // Fuerza a Jest a transformar axios
+      "node_modules/(?!axios)/"
     ],
-    "testEnvironment": "jsdom"   // Necesario para React Testing
+    "testEnvironment": "jsdom"
   },
   "eslintConfig": {
     "extends": [
