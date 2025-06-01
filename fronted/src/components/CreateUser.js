@@ -56,8 +56,9 @@ const CreateUser = () => {
       <h2>Crear Usuario</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Nombre</label>
+          <label htmlFor="nombre">Nombre</label>
           <input
+            id="nombre"
             type="text"
             name="nombre"
             value={formData.nombre}
@@ -67,8 +68,9 @@ const CreateUser = () => {
         </div>
 
         <div className="form-group">
-          <label>Apellido</label>
+          <label htmlFor="apellido">Apellido</label>
           <input
+            id="apellido"
             type="text"
             name="apellido"
             value={formData.apellido}
@@ -78,8 +80,9 @@ const CreateUser = () => {
         </div>
 
         <div className="form-group">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
             name="email"
             value={formData.email}
@@ -89,9 +92,10 @@ const CreateUser = () => {
         </div>
 
         <div className="form-group">
-          <label>Contraseña</label>
+          <label htmlFor="contrasena">Contraseña</label>
           <div className="password-container">
           <input
+            id="contrasena"
             type={showPassword ? 'text' : 'password'}
             name="contrasena"
             value={formData.contrasena}
@@ -101,6 +105,7 @@ const CreateUser = () => {
           <span
               className="password-toggle-icon"
               onClick={togglePasswordVisibility} // Llamar a la función para alternar
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Mostrar ícono según el estado */}
             </span>

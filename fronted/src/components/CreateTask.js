@@ -99,11 +99,13 @@ const CreateTask = () => {
             <div>
               <label htmlFor="fecha">Fecha</label>
               <input
+                id="fecha"
                 type="date"
                 name="fecha"
                 value={task.fecha}
                 onChange={handleChange}
                 required
+                disabled
               />
             </div>
             <div>
