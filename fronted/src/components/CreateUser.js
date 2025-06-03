@@ -5,6 +5,7 @@ import "../styles/CreateUser.css";
 import showAlert from "./Alert";
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 
+
 const CreateUser = () => {
   const [formData, setFormData] = useState({
     nombre: "",
